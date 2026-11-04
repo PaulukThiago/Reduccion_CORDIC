@@ -1,0 +1,37 @@
+.ORIG x3000
+
+;Carga de variables
+LD R0,PI
+LD R1,NPI
+LD R2,PI_DOS
+LD R3,NPI_DOS
+LD R4,TITA
+
+;Comparacion
+REDUCCION_POS
+	ADD R5,R4,R3 ; Guardo en R5 tita-Pi/2
+	BRnz REDUCCION_NEG ; Si tita-Pi/2 es negativo o 0 quiere decir que tita es mas chico o igual que Pi/2 y salta a la otra comprobacion
+	ADD R4,R4,R1; Hago tita-Pi para reducir tita
+	NOT R6,R6 ; Niego la bandera
+	ADD R6,R6,#2 ; Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
+	BRnzp REDUCCION_POS ; Salto devuelta al inicio del bucle
+
+REDUCCION_NEG
+	ADD R5,R4,R2 ; Guardo en R5 tita+Pi/2
+	BRzp FIN ; Si tita+Pi/2 es positivo o 0 quiere decir que esta en el intervalo o salto al final del programa
+	ADD R4,R4,R0 ; Hago tita+Pi
+	NOT R6,R6 ; Niego la bandera
+	ADD R6,R6,#2 ; Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
+	BRnzp REDUCCION_NEG ; Salto devuelta al inicio del bucle
+FIN
+	HALT
+
+
+
+TITA .FILL #25081 ;Tita de prueba (6.123456)
+PI .FILL #12867 ;Pi en Q3.12
+NPI .FILL #-12867 ;-Pi en Q3.12
+PI_DOS .FILL #6433 ;Pi/2 en Q3.12
+NPI_DOS .FILL #-6434 ;-Pi/2 en Q3.12
+
+.END
