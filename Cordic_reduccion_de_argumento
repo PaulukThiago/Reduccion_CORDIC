@@ -1,5 +1,5 @@
 .ORIG x3000
-
+HOLA
 ;Carga de variables
 LD R0,PI
 LD R1,NPI
