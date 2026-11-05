@@ -53,7 +53,7 @@ El resultado esperado debe encontrarse en el intervalo:
 
 El resultado reducido queda almacenado en R4.
 
-## Verificación del funcionamiento
+Verificación del funcionamiento
 
 Para verificar el programa:
 
