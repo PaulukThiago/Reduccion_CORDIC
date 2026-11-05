@@ -1,37 +1,46 @@
-.ORIG x3000
+Reduccion_Argumento
+;Guardamos los registros auxiliares
+ST R1, GUARDADO_R1
+ST R2, GUARDADO_R2
 
-;Carga de variables
-LD R0,PI
-LD R1,NPI
-LD R2,PI_DOS
-LD R3,NPI_DOS
-LD R4,TITA
+;Inicializamos la bandera
+AND R3, R3, #0
 
-;Comparacion
 REDUCCION_POS
-	ADD R5,R4,R3 ; Guardo en R5 tita-Pi/2
-	BRnz REDUCCION_NEG ; Si tita-Pi/2 es negativo o 0 quiere decir que tita es mas chico o igual que Pi/2 y salta a la otra comprobacion
-	ADD R4,R4,R1; Hago tita-Pi para reducir tita
-	NOT R6,R6 ; Niego la bandera
-	ADD R6,R6,#2 ; Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
-	BRnzp REDUCCION_POS ; Salto devuelta al inicio del bucle
+LD R1, NPI_DOS
+ADD R2, R0, R1 ;R2 = tita - Pi/2
+BRnz REDUCCION_NEG
+LD R1, NPI
+ADD R0, R0, R1 ;tita = tita - Pi
+NOT R3, R3 ;Niego la bandera
+ADD R3, R3, #2  ;Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
+BRnzp REDUCCION_POS
 
 REDUCCION_NEG
-	ADD R5,R4,R2 ; Guardo en R5 tita+Pi/2
-	BRzp FIN ; Si tita+Pi/2 es positivo o 0 quiere decir que esta en el intervalo o salto al final del programa
-	ADD R4,R4,R0 ; Hago tita+Pi
-	NOT R6,R6 ; Niego la bandera
-	ADD R6,R6,#2 ; Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
-	BRnzp REDUCCION_NEG ; Salto devuelta al inicio del bucle
+LD R1, PI_DOS
+ADD R2, R0, R1 ;R2 = tita + Pi/2
+BRzp FIN
+LD R1, PI
+ADD R0, R0, R1 ;tita = tita + Pi
+NOT R3, R3 ;Niego la bandera
+ADD R3, R3, #2 ;Alterno el estado de la bandera entre 0 y 1 (negativo y positivo)
+BRnzp REDUCCION_NEG
+
 FIN
-	HALT
+;Restauramos los registros auxiliares
+LD R1, GUARDADO_R1
+LD R2, GUARDADO_R2
 
+RET ;Regresa al programa principal (a la instruccion despues del JSR)
 
+;Constantes
+TITA .FILL #25081 ;6.12 rad (Resta Pi dos veces -> R0=-653, R3=0)
+PI .FILL #12867
+NPI .FILL #-12867
+PI_DOS .FILL #6433
+NPI_DOS .FILL #-6434
 
-TITA .FILL #25081 ;Tita de prueba (6.123456)
-PI .FILL #12867 ;Pi en Q3.12
-NPI .FILL #-12867 ;-Pi en Q3.12
-PI_DOS .FILL #6433 ;Pi/2 en Q3.12
-NPI_DOS .FILL #-6434 ;-Pi/2 en Q3.12
+GUARDADO_R1 .FILL #0
+GUARDADO_R2 .FILL #0
 
 .END
